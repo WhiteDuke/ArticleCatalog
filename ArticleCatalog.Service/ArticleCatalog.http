@@ -1,6 +1,6 @@
 @ArticleCatalog_HostAddress = http://localhost:5041
 
-GET {{ArticleCatalog_HostAddress}}/weatherforecast/
+GET {{ArticleCatalog_HostAddress}}/api/article
 Accept: application/json
 
 ###

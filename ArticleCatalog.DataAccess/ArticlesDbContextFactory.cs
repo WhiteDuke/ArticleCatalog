@@ -5,6 +5,10 @@ using Microsoft.Extensions.Configuration;
 
 namespace ArticleCatalog.DataAccess;
 
+/// <summary>
+/// Вызывается механизмом EF Core при генерации миграций.
+/// При создании контекста получаем для него строку подключения из appsettings проекта ArticleCatalog.Service
+/// </summary>
 public class ArticlesDbContextFactory : IDesignTimeDbContextFactory<ArticlesDbContext>
 {
     public ArticlesDbContext CreateDbContext(string[] args)
