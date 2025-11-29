@@ -1,0 +1,33 @@
+﻿services:
+  postgres-db:
+    container_name: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=141590
+      - POSTGRES_USER=admin
+      - PGDATA=./db-data
+    image: postgres:17.6-alpine3.22
+    restart: always
+    volumes:
+      - "./postgredb-data:/db-data"
+    networks:
+      - db-network
+  
+  pgadmin:
+    container_name: pgadmin
+    ports:
+      - 8080:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=white_duke@mail.ru
+      - PGADMIN_DEFAULT_PASSWORD=141590
+    image: dpage/pgadmin4:9.9
+    volumes:
+      - "./pgadmin-data:/var/lib/pgadmin"
+    restart: always
+    networks:
+      - db-network
+
+networks:
+  db-network:
+    driver: bridge

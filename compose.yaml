@@ -1,7 +1,0 @@
-﻿services:
-  articlecatalog:
-    image: articlecatalog
-    build:
-      context: .
-      dockerfile: Dockerfile
-
