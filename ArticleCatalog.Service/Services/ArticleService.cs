@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using ArticleCatalog.DataAccess;
-using ArticleCatalog.Domain.Data;
+using ArticleCatalog.Domain.Dto;
 using ArticleCatalog.Domain.Requests;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,7 +26,7 @@ public class ArticleService : IArticleService
         await Task.CompletedTask;
     }
 
-    public async Task<ArticleData> GetArticleByIdAsync(int id)
+    public async Task<ArticleDto> GetArticleByIdAsync(int id)
     {
         var article = await _dbContext.Articles.Include(x => x.ArticleTags)
             .ThenInclude(x => x.Tag)
@@ -38,7 +38,7 @@ public class ArticleService : IArticleService
             return null;
         }
 
-        var articleData = new ArticleData
+        var articleData = new ArticleDto
         {
             Id = article.Id,
             CreatedDate = article.CreatedDate,
@@ -50,14 +50,14 @@ public class ArticleService : IArticleService
         return articleData;
     }
 
-    public async Task<ArticleData[]> GetArticlesAsync(int pageNumber = DefaultPageNumber, int pageSize = DefaultPageSize)
+    public async Task<ArticleDto[]> GetArticlesAsync(int pageNumber = DefaultPageNumber, int pageSize = DefaultPageSize)
     {
         var query = _dbContext.Articles.Include(x => x.ArticleTags)
             .ThenInclude(x => x.Tag)
             .AsNoTracking();
 
         var articles = await query.Skip(pageNumber - 1).Take(pageSize)
-            .Select(x => new ArticleData()
+            .Select(x => new ArticleDto()
             {
                 Id = x.Id,
                 CreatedDate = x.CreatedDate,

@@ -1,8 +1,8 @@
 using System;
 
-namespace ArticleCatalog.Domain.Data;
+namespace ArticleCatalog.Domain.Dto;
 
-public class ArticleData
+public class ArticleDto
 {
     public int Id { get; set; }
 

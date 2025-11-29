@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using ArticleCatalog.Domain.Data;
+using ArticleCatalog.Domain.Dto;
 using ArticleCatalog.Domain.Requests;
 using ArticleCatalog.Service.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -18,14 +18,14 @@ public class ArticlesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<ArticleData[]>> GetArticles([FromQuery] int pageNumber, [FromQuery] int pageSize)
+    public async Task<ActionResult<ArticleDto[]>> GetArticles([FromQuery] int pageNumber, [FromQuery] int pageSize)
     {
         var articles = await _articleService.GetArticlesAsync(pageNumber, pageSize);
         return Ok(articles);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<ArticleData>> GetArticleById(int id)
+    public async Task<ActionResult<ArticleDto>> GetArticleById(int id)
     {
         var article = await _articleService.GetArticleByIdAsync(id);
 
