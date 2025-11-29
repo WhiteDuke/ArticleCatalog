@@ -2,7 +2,7 @@ using System;
 
 namespace ArticleCatalog.Domain.Dto;
 
-public class ArticleDto
+public sealed class ArticleDto
 {
     public int Id { get; set; }
 

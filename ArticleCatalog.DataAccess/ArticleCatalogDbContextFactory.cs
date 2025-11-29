@@ -9,7 +9,7 @@ namespace ArticleCatalog.DataAccess;
 /// Вызывается механизмом EF Core при генерации миграций.
 /// При создании контекста получаем для него строку подключения из appsettings проекта ArticleCatalog.Service
 /// </summary>
-public class ArticleCatalogDbContextFactory : IDesignTimeDbContextFactory<ArticleCatalogDbContext>
+public sealed class ArticleCatalogDbContextFactory : IDesignTimeDbContextFactory<ArticleCatalogDbContext>
 {
     public ArticleCatalogDbContext CreateDbContext(string[] args)
     {

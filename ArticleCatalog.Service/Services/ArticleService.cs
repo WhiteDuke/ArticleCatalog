@@ -1,13 +1,16 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using ArticleCatalog.DataAccess;
 using ArticleCatalog.Domain.Dto;
 using ArticleCatalog.Domain.Requests;
+using ArticleCatalog.Service.Exceptions;
+using ArticleCatalog.Service.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace ArticleCatalog.Service.Services;
 
-public class ArticleService : IArticleService
+public sealed class ArticleService : IArticleService
 {
     private const int DefaultPageNumber = 0;
     private const int DefaultPageSize = 50;
@@ -26,6 +29,26 @@ public class ArticleService : IArticleService
         await Task.CompletedTask;
     }
 
+    public async Task<ArticleDto> UpdateArticleAsync(UpdateArticleRequest request)
+    {
+        var article = await _dbContext.Articles
+            .Include(a => a.ArticleTags)
+            .ThenInclude(at => at.Tag)
+            .FirstOrDefaultAsync();
+
+        if (article == null)
+        {
+            throw new EntityNotFoundException("Статья не найдена по идентификатору");
+        }
+
+        article.Title = request.Title;
+        article.UpdatedDate = DateTimeOffset.Now;
+
+        await Task.CompletedTask;
+
+        return article.MapArticleToArticleDto();
+    }
+
     public async Task<ArticleDto> GetArticleByIdAsync(int id)
     {
         var article = await _dbContext.Articles.Include(x => x.ArticleTags)
@@ -33,21 +56,7 @@ public class ArticleService : IArticleService
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        if (article == null)
-        {
-            return null;
-        }
-
-        var articleData = new ArticleDto
-        {
-            Id = article.Id,
-            CreatedDate = article.CreatedDate,
-            UpdatedDate = article.UpdatedDate,
-            Tags = article.ArticleTags.OrderBy(x => x.Order).Select(x => x.Tag.Name).ToArray(),
-            Title = article.Title
-        };
-
-        return articleData;
+        return article?.MapArticleToArticleDto();
     }
 
     public async Task<ArticleDto[]> GetArticlesAsync(int pageNumber = DefaultPageNumber, int pageSize = DefaultPageSize)

@@ -1,16 +1,16 @@
 namespace ArticleCatalog.Domain.Entities;
 
-    public class ArticleTag
-    {
-        public int Id { get; set; }
+public class ArticleTag
+{
+    public int Id { get; set; }
 
-        public int Order { get; set; }
+    public int Order { get; set; }
 
-        public int ArticleId { get; set; }
-        
-        public Article Article { get; set; }
+    public int ArticleId { get; set; }
+    
+    public Article Article { get; set; }
 
-        public int TagId { get; set; }
+    public int TagId { get; set; }
 
-        public Tag Tag { get; set; }
-    }
+    public Tag Tag { get; set; }
+}
