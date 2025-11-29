@@ -9,9 +9,9 @@ namespace ArticleCatalog.DataAccess;
 /// Вызывается механизмом EF Core при генерации миграций.
 /// При создании контекста получаем для него строку подключения из appsettings проекта ArticleCatalog.Service
 /// </summary>
-public class ArticlesDbContextFactory : IDesignTimeDbContextFactory<ArticlesDbContext>
+public class ArticleCatalogDbContextFactory : IDesignTimeDbContextFactory<ArticleCatalogDbContext>
 {
-    public ArticlesDbContext CreateDbContext(string[] args)
+    public ArticleCatalogDbContext CreateDbContext(string[] args)
     {
         var webServiceProjectPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "ArticleCatalog.Service");
         
@@ -22,9 +22,9 @@ public class ArticlesDbContextFactory : IDesignTimeDbContextFactory<ArticlesDbCo
 
         var connectionString = configuration.GetConnectionString("PostgreSqlConnection");
         
-        var optionsBuilder = new DbContextOptionsBuilder<ArticlesDbContext>();
+        var optionsBuilder = new DbContextOptionsBuilder<ArticleCatalogDbContext>();
         optionsBuilder.UseNpgsql(connectionString);
 
-        return new ArticlesDbContext(optionsBuilder.Options);
+        return new ArticleCatalogDbContext(optionsBuilder.Options);
     }
 }

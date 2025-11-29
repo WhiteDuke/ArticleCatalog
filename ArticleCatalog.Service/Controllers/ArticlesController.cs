@@ -1,7 +1,8 @@
-using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
-using ArticleCatalog.Domain.Entities;
+using ArticleCatalog.Domain.Data;
 using ArticleCatalog.Domain.Requests;
+using ArticleCatalog.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArticleCatalog.Service.Controllers;
@@ -9,24 +10,45 @@ namespace ArticleCatalog.Service.Controllers;
 [Route("api/[controller]")]
 public class ArticlesController : ControllerBase
 {
-    [HttpGet]
-    public async Task<ActionResult<List<Article>>> GetArticles()
+    private readonly IArticleService _articleService;
+
+    public ArticlesController(IArticleService articleService)
     {
-        await Task.Delay(1000);
-        return Ok();
+        _articleService = articleService;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<ArticleData[]>> GetArticles([FromQuery] int pageNumber, [FromQuery] int pageSize)
+    {
+        var articles = await _articleService.GetArticlesAsync(pageNumber, pageSize);
+        return Ok(articles);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult> GetArticleById(int id)
+    public async Task<ActionResult<ArticleData>> GetArticleById(int id)
     {
-        await Task.Delay(1000);
-        return Ok();
+        var article = await _articleService.GetArticleByIdAsync(id);
+
+        if (article == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(article);
     }
 
     [HttpPost("create")]
-    public async Task<ActionResult> CreateArticle(CreateArticleRequest article)
+    public async Task<ActionResult> CreateArticle(CreateArticleRequest createArticleRequest)
     {
-        await Task.Delay(1000);
-        return Ok();
+        try
+        {
+            await _articleService.CreateArticleAsync(createArticleRequest);
+
+            return Ok();
+        }
+        catch (Exception)
+        {
+            return Problem("Не удалось сохранить статью. Попробуйте позднее.");
+        }
     }
 }

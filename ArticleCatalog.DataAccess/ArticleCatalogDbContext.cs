@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ArticleCatalog.DataAccess;
 
-public class ArticlesDbContext : DbContext
+public class ArticleCatalogDbContext : DbContext
 {
     private const int MaxLength256 = 256;
     private const int MaxLength1024 = 1024;
     
-    public ArticlesDbContext(DbContextOptions<ArticlesDbContext> options) : base(options)
+    public ArticleCatalogDbContext(DbContextOptions<ArticleCatalogDbContext> options) : base(options)
     {
     }
 

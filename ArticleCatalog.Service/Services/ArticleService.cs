@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using ArticleCatalog.DataAccess;
@@ -13,23 +12,18 @@ public class ArticleService : IArticleService
     private const int DefaultPageNumber = 0;
     private const int DefaultPageSize = 50;
 
-    private readonly ArticlesDbContext _dbContext;
+    private readonly ArticleCatalogDbContext _dbContext;
 
-    public ArticleService(ArticlesDbContext dbContext)
+    public ArticleService(ArticleCatalogDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
     public async Task CreateArticleAsync(CreateArticleRequest request)
     {
-        try
-        {
-            await Task.CompletedTask;
-        }
-        catch (Exception)
-        {
-            // ignored
-        }
+        // TODO: проверить и сохранить теги
+        
+        await Task.CompletedTask;
     }
 
     public async Task<ArticleData> GetArticleByIdAsync(int id)

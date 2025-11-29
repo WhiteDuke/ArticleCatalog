@@ -17,11 +17,11 @@ public class Program
         builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
         // Add services to the container.
-        builder.Services.AddDbContext<ArticlesDbContext>(options =>
+        builder.Services.AddDbContext<ArticleCatalogDbContext>(options =>
         {
             options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSqlConnection"), optionsBuilder =>
             {
-                optionsBuilder.MigrationsAssembly(typeof(ArticlesDbContext).Assembly.FullName);
+                optionsBuilder.MigrationsAssembly(typeof(ArticleCatalogDbContext).Assembly.FullName);
             });
         });
 
