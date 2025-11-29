@@ -18,4 +18,8 @@
       <ProjectReference Include="..\ArticleCatalog.DataAccess\ArticleCatalog.DataAccess.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="ArticleCatalog.csproj.user" />
+    </ItemGroup>
+
 </Project>
