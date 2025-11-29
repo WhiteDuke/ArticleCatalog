@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ArticleCatalog.DataAccess;
+using ArticleCatalog.Service.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -23,7 +24,9 @@ public class Program
                 optionsBuilder.MigrationsAssembly(typeof(ArticlesDbContext).Assembly.FullName);
             });
         });
-        
+
+        builder.Services.AddSingleton<IArticleService, ArticleService>();
+
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();

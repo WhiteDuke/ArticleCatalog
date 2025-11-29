@@ -13,4 +13,6 @@ public class Article
     public DateTimeOffset? UpdatedDate {get; set;}
 
     public ArticleTag[] ArticleTags { get; set; }
+    
+    public SectionArticle[] SectionArticles { get; set; }
 }
