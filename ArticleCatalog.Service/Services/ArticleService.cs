@@ -32,7 +32,7 @@ public sealed class ArticleService : IArticleService
             .Where(t => tagNames.Contains(t.Name))
             .ToListAsync();
 
-        var existingTagDict = existingTags.ToDictionary(t => t.Name);
+        var existingTagDict = existingTags.ToDictionary(t => t.Name, t => t);
 
         var article = new Article
         {
@@ -41,19 +41,20 @@ public sealed class ArticleService : IArticleService
             ArticleTags = []
         };
 
-        // Обрабатываем теги
         for (var i = 0; i < request.Tags.Length; i++)
         {
+            var order = i + 1;
             var tagName = request.Tags[i];
+
             if (existingTagDict.TryGetValue(tagName, out var existingTag))
             {
-                article.ArticleTags.Add(new ArticleTag { Tag = existingTag, Order = i});
+                article.ArticleTags.Add(new ArticleTag { Tag = existingTag, Order = order });
             }
             else
             {
                 var newTag = new Tag { Name = tagName };
                 _dbContext.Tags.Add(newTag);
-                article.ArticleTags.Add(new ArticleTag { Tag = newTag, Order = i});
+                article.ArticleTags.Add(new ArticleTag { Tag = newTag, Order = order });
             }
         }
 
@@ -66,6 +67,7 @@ public sealed class ArticleService : IArticleService
         var article = await _dbContext.Articles
             .Include(a => a.ArticleTags)
             .ThenInclude(at => at.Tag)
+            .Where(a => a.Id == request.Id)
             .FirstOrDefaultAsync();
 
         if (article == null)
@@ -73,28 +75,30 @@ public sealed class ArticleService : IArticleService
             throw new EntityNotFoundException("Статья не найдена по идентификатору");
         }
 
+        article.ArticleTags.Clear();
+
         var tagNames = new HashSet<string>(request.Tags.Select(x => x.Trim()));
 
         var existingTags = await _dbContext.Tags
             .Where(t => tagNames.Contains(t.Name))
             .ToListAsync();
 
-        var existingTagDict = existingTags.ToDictionary(t => t.Name);
+        var existingTagDict = existingTags.ToDictionary(t => t.Name, t => t);
 
-        // Обрабатываем теги
         for (var i = 0; i < request.Tags.Length; i++)
         {
             var tagName = request.Tags[i];
+            var order = i + 1;
 
             if (existingTagDict.TryGetValue(tagName, out var existingTag))
             {
-                article.ArticleTags.Add(new ArticleTag { Tag = existingTag, Order = i});
+                article.ArticleTags.Add(new ArticleTag { Tag = existingTag, Order = order});
             }
             else
             {
                 var newTag = new Tag { Name = tagName };
                 _dbContext.Tags.Add(newTag);
-                article.ArticleTags.Add(new ArticleTag { Tag = newTag, Order = i});
+                article.ArticleTags.Add(new ArticleTag { Tag = newTag, Order = order});
             }
         }
 

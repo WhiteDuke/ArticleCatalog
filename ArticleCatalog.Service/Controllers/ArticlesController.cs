@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using ArticleCatalog.Domain.Dto;
 using ArticleCatalog.Domain.Requests;
+using ArticleCatalog.Service.Exceptions;
 using ArticleCatalog.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -60,6 +61,10 @@ public class ArticlesController : ControllerBase
             var updatedArticle = await _articleService.UpdateArticleAsync(updateArticleRequest);
 
             return Ok(updatedArticle);
+        }
+        catch (EntityNotFoundException)
+        {
+            return NotFound();
         }
         catch (Exception)
         {
