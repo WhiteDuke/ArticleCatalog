@@ -20,6 +20,8 @@ public sealed class ArticleCatalogDbContext : DbContext
     
     public DbSet<Section> Sections { get; set; }
     
+    public DbSet<SectionTag> SectionTags { get; set; }
+
     public DbSet<SectionArticle> SectionArticles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -48,7 +50,7 @@ public sealed class ArticleCatalogDbContext : DbContext
 
             entity.HasIndex(e => new { e.ArticleId, e.TagId })
                 .IsUnique()
-                .HasDatabaseName($"{nameof(ArticleTag)}_{nameof(ArticleTag.ArticleId)}_{nameof(ArticleTag.TagId)}_Unique");
+                .HasDatabaseName($"{nameof(ArticleTags)}_{nameof(ArticleTag.ArticleId)}_{nameof(ArticleTag.TagId)}_Unique");
 
             entity.HasOne(e => e.Article)
                     .WithMany(e => e.ArticleTags)
@@ -66,14 +68,34 @@ public sealed class ArticleCatalogDbContext : DbContext
             entity.Property(e => e.Title).IsRequired().HasMaxLength(MaxLength1024);
         });
 
+        modelBuilder.Entity<SectionTag>(entity =>
+        {
+            entity.Property(e => e.SectionId).IsRequired();
+            entity.Property(e => e.TagId).IsRequired();
+            
+            entity.HasIndex(e => new { e.SectionId , e.TagId })
+                .IsUnique()
+                .HasDatabaseName($"{nameof(SectionTags)}_{nameof(SectionTag.SectionId)}_{nameof(SectionTag.TagId)}_Unique");
+
+            entity.HasOne(e => e.Section)
+                .WithMany(e => e.SectionTags)
+                .HasForeignKey(x => x.SectionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Tag)
+                .WithMany()
+                .HasForeignKey(x => x.TagId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
         modelBuilder.Entity<SectionArticle>(entity =>
         {
             entity.Property(e => e.ArticleId).IsRequired();
             entity.Property(e => e.SectionId).IsRequired();
 
-            entity.HasIndex(e => new { e.ArticleId, e.SectionId })
+            entity.HasIndex(e => new { e.SectionId , e.ArticleId })
                 .IsUnique()
-                .HasDatabaseName($"{nameof(SectionArticle)}_{nameof(SectionArticle.ArticleId)}_{nameof(SectionArticle.SectionId)}_Unique");
+                .HasDatabaseName($"{nameof(SectionArticles)}_{nameof(SectionArticle.SectionId)}_{nameof(SectionArticle.ArticleId)}_Unique");
 
             entity.HasOne(e => e.Article)
                 .WithMany(e => e.SectionArticles)
@@ -85,7 +107,5 @@ public sealed class ArticleCatalogDbContext : DbContext
                 .HasForeignKey(e => e.SectionId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
-
-
     }
 }

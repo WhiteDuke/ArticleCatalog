@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace ArticleCatalog.Domain.Entities;
 
 public class Tag
@@ -5,6 +7,6 @@ public class Tag
     public int Id { get; set; }
     
     public string Name { get; set; }
-    
-    public ArticleTag[] ArticleTags { get; set; }
+
+    public List<ArticleTag> ArticleTags { get; set; } = [];
 }

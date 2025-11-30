@@ -51,4 +51,19 @@ public class ArticlesController : ControllerBase
             return Problem("Не удалось сохранить статью. Попробуйте позднее.");
         }
     }
+
+    [HttpPatch("update")]
+    public async Task<ActionResult<ArticleDto>> UpdateArticle(UpdateArticleRequest updateArticleRequest)
+    {
+        try
+        {
+            var updatedArticle = await _articleService.UpdateArticleAsync(updateArticleRequest);
+
+            return Ok(updatedArticle);
+        }
+        catch (Exception)
+        {
+            return Problem("Не удалось отредактировать статью. Попробуйте позднее.");
+        }
+    }
 }

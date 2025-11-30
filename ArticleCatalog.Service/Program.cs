@@ -25,7 +25,7 @@ public class Program
             });
         });
 
-        builder.Services.AddSingleton<IArticleService, ArticleService>();
+        builder.Services.AddScoped<IArticleService, ArticleService>();
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

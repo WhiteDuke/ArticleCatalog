@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace ArticleCatalog.Domain.Entities;
 
 public class Section
@@ -6,7 +8,7 @@ public class Section
 
     public string Title { get; set; }
 
-    public ArticleTag[] ArticleTags { get; set; }
-    
-    public SectionArticle[] SectionArticles { get; set; }
+    public List<SectionArticle> SectionArticles { get; set; } = [];
+
+    public List<SectionTag> SectionTags { get; set; } = [];
 }

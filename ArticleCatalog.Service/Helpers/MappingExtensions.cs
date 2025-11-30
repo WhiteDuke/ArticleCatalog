@@ -19,7 +19,7 @@ public static class MappingExtensions
             CreatedDate = article.CreatedDate,
             UpdatedDate = article.UpdatedDate,
             Title = article.Title,
-            Tags = article.ArticleTags == null || article.ArticleTags.Length == 0 
+            Tags = article.ArticleTags == null || article.ArticleTags.Count == 0 
                 ? []
                 : article.ArticleTags.OrderBy(x => x.Order).Select(x => x.Tag.Name).ToArray()
         };
