@@ -4,6 +4,7 @@ using ArticleCatalog.Domain.Dto;
 using ArticleCatalog.Domain.Requests;
 using ArticleCatalog.Service.Exceptions;
 using ArticleCatalog.Service.Services;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArticleCatalog.Service.Controllers;
@@ -12,10 +13,17 @@ namespace ArticleCatalog.Service.Controllers;
 public class ArticlesController : ControllerBase
 {
     private readonly IArticleService _articleService;
+    private readonly IValidator<CreateArticleRequest> _createArticleRequestValidator;
+    private readonly IValidator<UpdateArticleRequest> _updateArticleRequestValidator;
 
-    public ArticlesController(IArticleService articleService)
+    public ArticlesController(
+        IArticleService articleService,
+        IValidator<CreateArticleRequest> createArticleRequestValidator,
+        IValidator<UpdateArticleRequest> updateArticleRequestValidator)
     {
         _articleService = articleService;
+        _createArticleRequestValidator = createArticleRequestValidator;
+        _updateArticleRequestValidator = updateArticleRequestValidator;
     }
 
     [HttpGet]
@@ -41,6 +49,13 @@ public class ArticlesController : ControllerBase
     [HttpPost("create")]
     public async Task<ActionResult> CreateArticle(CreateArticleRequest createArticleRequest)
     {
+        // ReSharper disable once MethodHasAsyncOverload
+        var validationResult = _createArticleRequestValidator.Validate(createArticleRequest);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.ToString());
+        }
+        
         try
         {
             await _articleService.CreateArticleAsync(createArticleRequest);
@@ -56,6 +71,13 @@ public class ArticlesController : ControllerBase
     [HttpPatch("update")]
     public async Task<ActionResult<ArticleDto>> UpdateArticle(UpdateArticleRequest updateArticleRequest)
     {
+        // ReSharper disable once MethodHasAsyncOverload
+        var validationResult = _updateArticleRequestValidator.Validate(updateArticleRequest);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.ToString());
+        }
+
         try
         {
             var updatedArticle = await _articleService.UpdateArticleAsync(updateArticleRequest);

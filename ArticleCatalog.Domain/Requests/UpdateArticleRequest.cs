@@ -1,10 +1,6 @@
 namespace ArticleCatalog.Domain.Requests;
 
-public sealed class UpdateArticleRequest
+public sealed class UpdateArticleRequest : CreateArticleRequest
 {
     public int Id { get; set; }
-    
-    public string Title { get; set; }
-    
-    public string[] Tags { get; set; }
 }

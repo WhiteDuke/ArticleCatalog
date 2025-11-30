@@ -1,6 +1,6 @@
 namespace ArticleCatalog.Domain.Requests;
 
-public sealed class CreateArticleRequest
+public class CreateArticleRequest
 {
     public string Title { get; set; }
     

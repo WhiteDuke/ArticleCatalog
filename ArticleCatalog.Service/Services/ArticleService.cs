@@ -26,10 +26,13 @@ public sealed class ArticleService : IArticleService
 
     public async Task CreateArticleAsync(CreateArticleRequest request)
     {
-        var tagNames = new HashSet<string>(request.Tags.Select(x => x.Trim()));
+        // чтобы обеспечить уникальность тэгов для статьи, но сохранить порядок тэгов
+        // ["тег 1", "тег 2", "тег 3", "тег 1", "тег 4"] - "тег 1" в позиции 3 будет отброшен
+        var tagsHashSet = new HashSet<string>();
+        var uniqueTags = request.Tags.Where(x => tagsHashSet.Add(x.Trim())).Select(t => t.Trim()).ToList();
 
         var existingTags = await _dbContext.Tags
-            .Where(t => tagNames.Contains(t.Name))
+            .Where(t => tagsHashSet.Contains(t.Name))
             .ToListAsync();
 
         var existingTagDict = existingTags.ToDictionary(t => t.Name, t => t);
@@ -41,10 +44,10 @@ public sealed class ArticleService : IArticleService
             ArticleTags = []
         };
 
-        for (var i = 0; i < request.Tags.Length; i++)
+        for (var i = 0; i < uniqueTags.Count; i++)
         {
             var order = i + 1;
-            var tagName = request.Tags[i];
+            var tagName = uniqueTags[i];
 
             if (existingTagDict.TryGetValue(tagName, out var existingTag))
             {
@@ -77,17 +80,18 @@ public sealed class ArticleService : IArticleService
 
         article.ArticleTags.Clear();
 
-        var tagNames = new HashSet<string>(request.Tags.Select(x => x.Trim()));
+        var tagsHashSet = new HashSet<string>();
+        var uniqueTags = request.Tags.Where(x => tagsHashSet.Add(x.Trim())).Select(t => t.Trim()).ToList();
 
         var existingTags = await _dbContext.Tags
-            .Where(t => tagNames.Contains(t.Name))
+            .Where(t => tagsHashSet.Contains(t.Name))
             .ToListAsync();
 
         var existingTagDict = existingTags.ToDictionary(t => t.Name, t => t);
 
-        for (var i = 0; i < request.Tags.Length; i++)
+        for (var i = 0; i < uniqueTags.Count; i++)
         {
-            var tagName = request.Tags[i];
+            var tagName = uniqueTags[i];
             var order = i + 1;
 
             if (existingTagDict.TryGetValue(tagName, out var existingTag))
