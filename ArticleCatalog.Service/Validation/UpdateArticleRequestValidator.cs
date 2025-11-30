@@ -7,11 +7,12 @@ public sealed class UpdateArticleRequestValidator : AbstractValidator<UpdateArti
 {
     public UpdateArticleRequestValidator()
     {
-        RuleFor(x => x.Id)
-            .Must(id => id != 0)
-            .WithMessage("Отсутствует идентификатор статьи");
-
         RuleFor(x => x)
             .SetValidator(new CreateArticleRequestValidator());
+
+        RuleFor(x => x.Id)
+            .Must(id => id != 0)
+            .When(x => x != null)
+            .WithMessage("Отсутствует идентификатор статьи");
     }
 }

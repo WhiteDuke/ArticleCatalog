@@ -23,92 +23,114 @@ public sealed class ArticleService : IArticleService
 
     public async Task CreateArticleAsync(CreateArticleRequest request)
     {
-        // чтобы обеспечить уникальность тэгов для статьи, но сохранить порядок тэгов
-        // ["тег 1", "тег 2", "тег 3", "тег 1", "тег 4"] - "тег 1" в позиции 3 будет отброшен
-        var tagsHashSet = new HashSet<string>();
-        var uniqueTags = request.Tags.Where(x => tagsHashSet.Add(x.Trim())).Select(t => t.Trim()).ToList();
+        await using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
-        var existingTags = await _dbContext.Tags
-            .Where(t => tagsHashSet.Contains(t.Name))
-            .ToListAsync();
-
-        var existingTagDict = existingTags.ToDictionary(t => t.Name, t => t);
-
-        var article = new Article
+        try
         {
-            CreatedDate = DateTime.UtcNow,
-            Title = request.Title,
-            ArticleTags = []
-        };
+            // чтобы обеспечить уникальность тэгов для статьи, но сохранить порядок тэгов
+            // ["тег 1", "тег 2", "тег 3", "тег 1", "тег 4"] - "тег 1" в позиции 3 будет отброшен
+            var tagsHashSet = new HashSet<string>();
+            var uniqueTags = request.Tags.Where(x => tagsHashSet.Add(x.Trim())).Select(t => t.Trim()).ToList();
 
-        for (var i = 0; i < uniqueTags.Count; i++)
-        {
-            var order = i + 1;
-            var tagName = uniqueTags[i];
+            var existingTags = await _dbContext.Tags
+                .Where(t => tagsHashSet.Contains(t.Name))
+                .ToListAsync();
 
-            if (existingTagDict.TryGetValue(tagName, out var existingTag))
+            var existingTagDict = existingTags.ToDictionary(t => t.Name, t => t);
+
+            var article = new Article
             {
-                article.ArticleTags.Add(new ArticleTag { Tag = existingTag, Order = order });
-            }
-            else
+                CreatedDate = DateTime.UtcNow,
+                Title = request.Title,
+                ArticleTags = []
+            };
+
+            for (var i = 0; i < uniqueTags.Count; i++)
             {
-                var newTag = new Tag { Name = tagName };
-                _dbContext.Tags.Add(newTag);
-                article.ArticleTags.Add(new ArticleTag { Tag = newTag, Order = order });
+                var order = i + 1;
+                var tagName = uniqueTags[i];
+
+                if (existingTagDict.TryGetValue(tagName, out var existingTag))
+                {
+                    article.ArticleTags.Add(new ArticleTag { Tag = existingTag, Order = order });
+                }
+                else
+                {
+                    var newTag = new Tag { Name = tagName };
+                    _dbContext.Tags.Add(newTag);
+                    article.ArticleTags.Add(new ArticleTag { Tag = newTag, Order = order });
+                }
             }
+
+            _dbContext.Articles.Add(article);
+            await _dbContext.SaveChangesAsync();
+            await transaction.CommitAsync();
         }
-
-        _dbContext.Articles.Add(article);
-        await _dbContext.SaveChangesAsync();
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 
     public async Task<ArticleDto> UpdateArticleAsync(UpdateArticleRequest request)
     {
-        var article = await _dbContext.Articles
-            .Include(a => a.ArticleTags)
-            .ThenInclude(at => at.Tag)
-            .Where(a => a.Id == request.Id)
-            .FirstOrDefaultAsync();
+        await using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
-        if (article == null)
+        try
         {
-            throw new EntityNotFoundException("Статья не найдена по идентификатору");
+            var article = await _dbContext.Articles
+                .Include(a => a.ArticleTags)
+                .ThenInclude(at => at.Tag)
+                .Where(a => a.Id == request.Id)
+                .FirstOrDefaultAsync();
+
+            if (article == null)
+            {
+                throw new EntityNotFoundException("Статья не найдена по идентификатору");
+            }
+
+            article.ArticleTags.Clear();
+
+            var tagsHashSet = new HashSet<string>();
+            var uniqueTags = request.Tags.Where(x => tagsHashSet.Add(x.Trim())).Select(t => t.Trim()).ToList();
+
+            var existingTags = await _dbContext.Tags
+                .Where(t => tagsHashSet.Contains(t.Name))
+                .ToListAsync();
+
+            var existingTagDict = existingTags.ToDictionary(t => t.Name, t => t);
+
+            for (var i = 0; i < uniqueTags.Count; i++)
+            {
+                var tagName = uniqueTags[i];
+                var order = i + 1;
+
+                if (existingTagDict.TryGetValue(tagName, out var existingTag))
+                {
+                    article.ArticleTags.Add(new ArticleTag { Tag = existingTag, Order = order });
+                }
+                else
+                {
+                    var newTag = new Tag { Name = tagName };
+                    _dbContext.Tags.Add(newTag);
+                    article.ArticleTags.Add(new ArticleTag { Tag = newTag, Order = order });
+                }
+            }
+
+            article.Title = request.Title;
+            article.UpdatedDate = DateTime.UtcNow;
+
+            await _dbContext.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            return article.MapArticleToArticleDto();
         }
-
-        article.ArticleTags.Clear();
-
-        var tagsHashSet = new HashSet<string>();
-        var uniqueTags = request.Tags.Where(x => tagsHashSet.Add(x.Trim())).Select(t => t.Trim()).ToList();
-
-        var existingTags = await _dbContext.Tags
-            .Where(t => tagsHashSet.Contains(t.Name))
-            .ToListAsync();
-
-        var existingTagDict = existingTags.ToDictionary(t => t.Name, t => t);
-
-        for (var i = 0; i < uniqueTags.Count; i++)
+        catch (Exception)
         {
-            var tagName = uniqueTags[i];
-            var order = i + 1;
-
-            if (existingTagDict.TryGetValue(tagName, out var existingTag))
-            {
-                article.ArticleTags.Add(new ArticleTag { Tag = existingTag, Order = order});
-            }
-            else
-            {
-                var newTag = new Tag { Name = tagName };
-                _dbContext.Tags.Add(newTag);
-                article.ArticleTags.Add(new ArticleTag { Tag = newTag, Order = order});
-            }
+            await transaction.RollbackAsync();
+            throw;
         }
-
-        article.Title = request.Title;
-        article.UpdatedDate = DateTime.UtcNow;
-
-        await _dbContext.SaveChangesAsync();
-
-        return article.MapArticleToArticleDto();
     }
 
     public async Task<ArticleDto> GetArticleByIdAsync(int id)
