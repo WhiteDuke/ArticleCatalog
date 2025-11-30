@@ -14,9 +14,6 @@ namespace ArticleCatalog.Service.Services;
 
 public sealed class ArticleService : IArticleService
 {
-    private const int DefaultPageNumber = 0;
-    private const int DefaultPageSize = 50;
-
     private readonly ArticleCatalogDbContext _dbContext;
 
     public ArticleService(ArticleCatalogDbContext dbContext)
@@ -124,13 +121,19 @@ public sealed class ArticleService : IArticleService
         return article?.MapArticleToArticleDto();
     }
 
-    public async Task<ArticleDto[]> GetArticlesAsync(int pageNumber = DefaultPageNumber, int pageSize = DefaultPageSize)
+    public async Task<ArticleDto[]> GetArticlesAsync(int pageNumber, int pageSize)
     {
+        if (pageSize == 0)
+        {
+            pageSize = GlobalConstants.DefaultPageSize;
+        }
+
         var query = _dbContext.Articles.Include(x => x.ArticleTags)
             .ThenInclude(x => x.Tag)
             .AsNoTracking();
 
-        var articles = await query.Skip(pageNumber - 1).Take(pageSize)
+        var articles = await query.Skip(pageNumber).Take(pageSize)
+            .OrderByDescending(x => x.UpdatedDate ?? x.CreatedDate)
             .Select(x => new ArticleDto()
             {
                 Id = x.Id,

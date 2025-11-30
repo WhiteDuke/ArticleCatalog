@@ -27,7 +27,9 @@ public class ArticlesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<ArticleDto[]>> GetArticles([FromQuery] int pageNumber, [FromQuery] int pageSize)
+    public async Task<ActionResult<ArticleDto[]>> GetArticles(
+        [FromQuery] int pageNumber = 0,
+        [FromQuery] int pageSize = GlobalConstants.DefaultPageSize)
     {
         var articles = await _articleService.GetArticlesAsync(pageNumber, pageSize);
         return Ok(articles);

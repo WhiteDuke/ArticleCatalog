@@ -8,9 +8,9 @@ public sealed class ArticleDto
 
     public string Title { get; set; }
 
-    public DateTimeOffset CreatedDate { get; set; }
+    public DateTime CreatedDate { get; set; }
 
-    public DateTimeOffset? UpdatedDate { get; set; }
+    public DateTime? UpdatedDate { get; set; }
 
     public string[] Tags { get; set; }
 }
