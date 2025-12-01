@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using ArticleCatalog.Domain.Dto;
+using ArticleCatalog.Dto;
 using ArticleCatalog.Service.Exceptions;
 using ArticleCatalog.Service.Services;
 using Microsoft.AspNetCore.Mvc;

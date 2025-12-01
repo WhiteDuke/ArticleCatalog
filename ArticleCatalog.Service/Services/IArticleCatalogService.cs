@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using ArticleCatalog.Domain.Dto;
 using ArticleCatalog.Domain.Requests;
+using ArticleCatalog.Dto;
 
 namespace ArticleCatalog.Service.Services;
 

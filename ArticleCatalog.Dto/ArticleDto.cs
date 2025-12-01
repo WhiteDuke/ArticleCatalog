@@ -1,6 +1,6 @@
 using System;
 
-namespace ArticleCatalog.Domain.Dto;
+namespace ArticleCatalog.Dto;
 
 /// <summary>
 /// Статья

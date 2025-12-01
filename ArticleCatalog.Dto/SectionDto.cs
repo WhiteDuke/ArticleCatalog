@@ -1,4 +1,4 @@
-namespace ArticleCatalog.Domain.Dto;
+namespace ArticleCatalog.Dto;
 
 public sealed class SectionDto
 {
