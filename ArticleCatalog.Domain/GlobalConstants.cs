@@ -1,4 +1,4 @@
-namespace ArticleCatalog.Service;
+namespace ArticleCatalog.Domain;
 
 public static class GlobalConstants
 {

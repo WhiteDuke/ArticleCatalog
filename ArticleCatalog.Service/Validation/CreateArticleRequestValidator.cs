@@ -1,4 +1,5 @@
 using System.Linq;
+using ArticleCatalog.Domain;
 using ArticleCatalog.Domain.Requests;
 using FluentValidation;
 

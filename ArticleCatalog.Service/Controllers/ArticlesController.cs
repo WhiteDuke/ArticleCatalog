@@ -1,8 +1,9 @@
 using System;
 using System.Threading.Tasks;
+using ArticleCatalog.Domain;
+using ArticleCatalog.Domain.Exceptions;
 using ArticleCatalog.Domain.Requests;
 using ArticleCatalog.Dto;
-using ArticleCatalog.Service.Exceptions;
 using ArticleCatalog.Service.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;

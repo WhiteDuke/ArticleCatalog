@@ -1,6 +1,6 @@
 using System;
 
-namespace ArticleCatalog.Service.Exceptions;
+namespace ArticleCatalog.Domain.Exceptions;
 
 public sealed class EntityNotFoundException : Exception
 {

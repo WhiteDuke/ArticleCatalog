@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ArticleCatalog.Service.Helpers;
+namespace ArticleCatalog.Domain.Helpers;
 
 public static class SectionHelper
 {

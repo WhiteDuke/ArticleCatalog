@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ArticleCatalog.DataAccess;
+using ArticleCatalog.Domain;
 using ArticleCatalog.Domain.Entities;
+using ArticleCatalog.Domain.Exceptions;
+using ArticleCatalog.Domain.Extensions;
+using ArticleCatalog.Domain.Helpers;
 using ArticleCatalog.Domain.Requests;
 using ArticleCatalog.Dto;
-using ArticleCatalog.Service.Exceptions;
-using ArticleCatalog.Service.Extensions;
-using ArticleCatalog.Service.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace ArticleCatalog.Service.Services;
