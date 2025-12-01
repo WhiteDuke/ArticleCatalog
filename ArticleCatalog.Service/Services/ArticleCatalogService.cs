@@ -234,4 +234,28 @@ public sealed class ArticleCatalogService : IArticleCatalogService
 
         return articles;
     }
+
+    public async Task<ArticleDto[]> GetArticlesOfSectionAsync(int sectionId)
+    {
+        var section = await _dbContext.Sections.Where(s => s.Id == sectionId).FirstOrDefaultAsync();
+
+        if (section == null)
+        {
+            throw new EntityNotFoundException("Раздел не найден по идентификатору");
+        }
+
+        var sectionArticles = await _dbContext.SectionArticles
+            .Where(sa => sa.SectionId == sectionId).AsNoTracking()
+            .Include(s => s.Article)
+            .ThenInclude(s => s.ArticleTags)
+            .ThenInclude(at => at.Tag)
+            .AsNoTracking()
+            .Select(x => x.Article)
+            .OrderByDescending(x => x.UpdatedDate ?? x.CreatedDate)
+            .ToArrayAsync();
+
+        var articles = sectionArticles.Select(x => x.MapArticleToArticleDto()).ToArray();
+
+        return articles;
+    }
 }

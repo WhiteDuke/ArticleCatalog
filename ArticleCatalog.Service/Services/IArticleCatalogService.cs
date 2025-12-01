@@ -13,4 +13,6 @@ public interface IArticleCatalogService
     public Task<ArticleDto> GetArticleByIdAsync(int id);
 
     public Task<ArticleDto[]> GetArticlesAsync(int pageNumber, int pageSize);
+
+    public Task<ArticleDto[]> GetArticlesOfSectionAsync(int sectionId);
 }
