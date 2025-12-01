@@ -5,6 +5,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F46AA3B4-A1CB-49D1-98E8-7A5CE522288A}"
 	ProjectSection(SolutionItems) = preProject
 		compose.yaml = compose.yaml
+		Dockerfile = Dockerfile
+		.dockerignore = .dockerignore
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArticleCatalog.Domain", "ArticleCatalog.Domain\ArticleCatalog.Domain.csproj", "{B36FCF84-A1D6-43DB-9E07-6298A3FB7E37}"

@@ -1,0 +1,31 @@
+﻿services:
+  web:
+    container_name: article-catalog-app
+    image: article-catalog:latest
+    ports:
+      - "5041:5041"
+    networks:
+      - article-catalog-network
+    depends_on:
+      - postgres-db
+    environment:
+      - CONNECTION_STRING=Host=postgres-db;Port=5432;Username=admin;Password=141590;Database=ArticlesCatalog;
+
+  postgres-db:
+    container_name: postgres-db
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=141590
+      - POSTGRES_USER=admin
+      - PGDATA=./db-data
+    image: postgres:17.6-alpine3.22
+    restart: always
+    volumes:
+      - "./postgredb-data:/db-data"
+    networks:
+      - article-catalog-network
+
+networks:
+  article-catalog-network:
+    driver: bridge

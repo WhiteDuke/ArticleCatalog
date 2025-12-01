@@ -46,17 +46,13 @@ public class Program
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
+        app.UseCors(policy => policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod());
 
-        app.UseHttpsRedirection();
-
-        app.UseAuthorization();
-
+        app.UseSwagger();
+        app.UseSwaggerUI();
 
         app.MapControllers();
 
