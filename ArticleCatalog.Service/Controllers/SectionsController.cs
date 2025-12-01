@@ -17,6 +17,14 @@ public class SectionsController : ControllerBase
         _articleCatalogService = articleCatalogService;
     }
 
+    [HttpGet]
+    public async Task<ActionResult> GetSections()
+    {
+        await Task.CompletedTask;
+
+        return Ok();
+    }
+
     [HttpGet("{sectionId}/articles")]
     public async Task<ActionResult<ArticleDto[]>> GetArticlesOfSection([FromRoute] int sectionId)
     {

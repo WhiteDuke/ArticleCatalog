@@ -24,4 +24,18 @@ public static class MappingExtensions
                 : article.ArticleTags.OrderBy(x => x.Order).Select(x => x.Tag.Name).ToArray()
         };
     }
+
+    public static SectionDto MapSectionToSectionDto(this Section section)
+    {
+        if (section == null)
+        {
+            return null;
+        }
+
+        return new SectionDto()
+        {
+            Id = section.Id,
+            Title = section.Title
+        };
+    }
 }
