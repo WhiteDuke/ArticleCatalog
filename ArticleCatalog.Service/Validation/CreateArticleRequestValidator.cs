@@ -13,9 +13,9 @@ public sealed class CreateArticleRequestValidator : AbstractValidator<CreateArti
             .WithMessage("Отсутствуют данные");
 
         RuleFor(x => x.Tags)
-            .Must(x => x.Distinct().Count() <= 256)
+            .Must(x => x.Distinct().Count() <= GlobalConstants.ArticleTagsMaxCount)
             .When(x => x?.Tags != null)
-            .WithMessage("У статьи может быть не больше 256 уникальных тэгов");
+            .WithMessage($"У статьи может быть не больше {GlobalConstants.ArticleTagsMaxCount} уникальных тэгов");
 
         RuleFor(x => x.Title)
             .Must(x => !string.IsNullOrEmpty(x))
@@ -23,8 +23,8 @@ public sealed class CreateArticleRequestValidator : AbstractValidator<CreateArti
             .WithMessage("У статьи должно быть название");
 
         RuleFor(x => x.Title)
-            .Must(x => x.Length <= 256)
+            .Must(x => x.Length <= GlobalConstants.ArticleTitleLength)
             .When(x => x != null && !string.IsNullOrWhiteSpace(x.Title))
-            .WithMessage("Название статьи должно быть не больше 256 символов");
+            .WithMessage($"Название статьи должно быть не больше {GlobalConstants.ArticleTitleLength} символов");
     }
 }
