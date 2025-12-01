@@ -47,9 +47,8 @@ public sealed class ArticleCatalogService : IArticleCatalogService
             await _dbContext.SaveChangesAsync();
             await transaction.CommitAsync();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine(ex);
             await transaction.RollbackAsync();
             throw;
         }
@@ -107,9 +106,8 @@ public sealed class ArticleCatalogService : IArticleCatalogService
 
             return article.MapArticleToArticleDto();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine(ex);
             await transaction.RollbackAsync();
             throw;
         }
@@ -221,8 +219,8 @@ public sealed class ArticleCatalogService : IArticleCatalogService
             .ThenInclude(x => x.Tag)
             .AsNoTracking();
 
-        var articles = await query.Skip(pageNumber).Take(pageSize)
-            .OrderByDescending(x => x.UpdatedDate ?? x.CreatedDate)
+        var articles = await query.OrderByDescending(x => x.UpdatedDate ?? x.CreatedDate)
+            .Skip(pageNumber).Take(pageSize)
             .Select(x => new ArticleDto()
             {
                 Id = x.Id,

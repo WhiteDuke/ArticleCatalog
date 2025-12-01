@@ -9,6 +9,8 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog.Events;
 
 namespace ArticleCatalog.Service;
 
@@ -20,6 +22,23 @@ public class Program
 
         builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
+
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Is(LogEventLevel.Warning)
+            .Enrich.FromLogContext()
+            .WriteTo.Console(
+                restrictedToMinimumLevel: LogEventLevel.Warning,
+                outputTemplate: "{Timestamp: dd.MM.yyyy HH:mm:ss} [{Level}] {Message}{NewLine}{Exception}")
+            .WriteTo.File(
+                path: "logs/log-.txt",
+                rollingInterval: RollingInterval.Day,
+                restrictedToMinimumLevel: LogEventLevel.Warning,
+                fileSizeLimitBytes: 10485760,
+                retainedFileCountLimit: 31,
+                outputTemplate: "{Timestamp:dd.MM.yyyy HH:mm:ss} [{Level}] {Message}{NewLine}{Exception}")
+            .CreateLogger();
+
+        builder.Host.UseSerilog();
 
         // Add services to the container.
         builder.Services.AddDbContext<ArticleCatalogDbContext>(options =>
@@ -74,10 +93,10 @@ public class Program
             {
                 retryCount++;
                 Thread.Sleep(2000);
-                Console.WriteLine($"Попытка подключения к БД №{retryCount}. Ошибка: {ex.Message}");
+                Log.Error(ex,"Попытка подключения к БД №{RetryCount}. Ошибка: {ExMessage}", retryCount, ex.Message);
             }
         }
-        
+
         app.Run();
     }
 }
