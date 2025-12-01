@@ -94,7 +94,7 @@ public sealed class ArticleCatalogService : IArticleCatalogService
                 article.ArticleTags.Clear();
             }
 
-            var uniqueTags = GetUniqueTags(request.Tags).ToArray();
+            var uniqueTags = GetUniqueTags(request.Tags);
             article = await AddTagsToArticleAsync(article, uniqueTags);
             article.Title = request.Title;
             article.UpdatedDate = DateTime.UtcNow;
@@ -258,5 +258,14 @@ public sealed class ArticleCatalogService : IArticleCatalogService
         var articles = sectionArticles.Select(x => x.MapArticleToArticleDto()).ToArray();
 
         return articles;
+    }
+
+    public async Task<SectionDto[]> GetSections()
+    {
+        var sections = await _dbContext.Sections.AsNoTracking()
+            .Include(s => s.SectionArticles)
+            .OrderByDescending(s => s.SectionArticles.Count).ToArrayAsync();
+
+        return sections.Select(s => s.MapSectionToSectionDto()).ToArray();
     }
 }

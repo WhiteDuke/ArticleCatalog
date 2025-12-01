@@ -20,9 +20,9 @@ public class SectionsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult> GetSections()
     {
-        await Task.CompletedTask;
+        var sections = await _articleCatalogService.GetSections();
 
-        return Ok();
+        return Ok(sections);
     }
 
     [HttpGet("{sectionId}/articles")]
