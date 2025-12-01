@@ -4,8 +4,8 @@
     ports:
       - 5432:5432
     environment:
-      - POSTGRES_PASSWORD=141590
-      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=%PASSWORD%
+      - POSTGRES_USER=%USER%
       - PGDATA=./db-data
     image: postgres:17.6-alpine3.22
     restart: always

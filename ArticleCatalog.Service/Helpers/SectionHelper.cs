@@ -5,8 +5,13 @@ namespace ArticleCatalog.Service.Helpers;
 
 public static class SectionHelper
 {
-    public static string GetSectionTitle(IEnumerable<string> tags)
+    public static string GetSectionTitle(ICollection<string> tags)
     {
+        if (tags.Count == 0)
+        {
+            return "Без тэгов";
+        }
+        
         var sb = new StringBuilder();
         foreach (var tag in tags)
         {

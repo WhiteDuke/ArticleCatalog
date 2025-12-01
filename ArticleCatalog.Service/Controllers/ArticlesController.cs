@@ -36,7 +36,7 @@ public class ArticlesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<ArticleDto>> GetArticleById(int id)
+    public async Task<ActionResult<ArticleDto>> GetArticleById([FromRoute] int id)
     {
         var article = await _articleService.GetArticleByIdAsync(id);
 
