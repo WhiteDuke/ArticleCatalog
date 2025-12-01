@@ -18,6 +18,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ArticleCatalog.DataAccess\ArticleCatalog.DataAccess.csproj" />
+      <ProjectReference Include="..\ArticleCatalog.Domain\ArticleCatalog.Domain.csproj" />
       <ProjectReference Include="..\ArticleCatalog.Dto\ArticleCatalog.Dto.csproj" />
     </ItemGroup>
 

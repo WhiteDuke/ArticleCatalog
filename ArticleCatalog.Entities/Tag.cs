@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ArticleCatalog.Domain.Entities;
+namespace ArticleCatalog.Entities;
 
 /// <summary>
 /// Модель "Тэг статьи"

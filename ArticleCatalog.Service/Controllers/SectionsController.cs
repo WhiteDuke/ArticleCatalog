@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using ArticleCatalog.Domain.Exceptions;
+using ArticleCatalog.Domain.Services;
 using ArticleCatalog.Dto;
-using ArticleCatalog.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArticleCatalog.Service.Controllers;

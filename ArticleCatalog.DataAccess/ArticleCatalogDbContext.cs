@@ -1,4 +1,4 @@
-using ArticleCatalog.Domain.Entities;
+using ArticleCatalog.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ArticleCatalog.DataAccess;

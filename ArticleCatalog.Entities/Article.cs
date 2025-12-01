@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ArticleCatalog.Domain.Entities;
+namespace ArticleCatalog.Entities;
 
 /// <summary>
 /// Сущность "Статья"

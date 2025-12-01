@@ -1,4 +1,4 @@
-namespace ArticleCatalog.Domain.Entities;
+namespace ArticleCatalog.Entities;
 
 /// <summary>
 /// Сущность связи между сущностями "Статья" и "Тэг"

@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using ArticleCatalog.Domain;
 using ArticleCatalog.Domain.Exceptions;
 using ArticleCatalog.Domain.Requests;
+using ArticleCatalog.Domain.Services;
 using ArticleCatalog.Dto;
-using ArticleCatalog.Service.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 

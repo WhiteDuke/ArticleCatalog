@@ -1,6 +1,6 @@
 using System.Linq;
-using ArticleCatalog.Domain.Entities;
 using ArticleCatalog.Dto;
+using ArticleCatalog.Entities;
 
 namespace ArticleCatalog.Domain.Extensions;
 

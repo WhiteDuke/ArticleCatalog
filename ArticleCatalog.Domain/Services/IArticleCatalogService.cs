@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using ArticleCatalog.Domain.Requests;
 using ArticleCatalog.Dto;
 
-namespace ArticleCatalog.Service.Services;
+namespace ArticleCatalog.Domain.Services;
 
 public interface IArticleCatalogService
 {
