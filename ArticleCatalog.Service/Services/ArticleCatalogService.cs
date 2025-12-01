@@ -13,11 +13,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ArticleCatalog.Service.Services;
 
-public sealed class ArticleService : IArticleService
+public sealed class ArticleCatalogService : IArticleCatalogService
 {
     private readonly ArticleCatalogDbContext _dbContext;
 
-    public ArticleService(ArticleCatalogDbContext dbContext)
+    public ArticleCatalogService(ArticleCatalogDbContext dbContext)
     {
         _dbContext = dbContext;
     }

@@ -4,7 +4,7 @@ using ArticleCatalog.Domain.Requests;
 
 namespace ArticleCatalog.Service.Services;
 
-public interface IArticleService
+public interface IArticleCatalogService
 {
     public Task CreateArticleAsync(CreateArticleRequest request);
 

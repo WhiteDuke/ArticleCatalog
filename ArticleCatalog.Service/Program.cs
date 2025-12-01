@@ -28,7 +28,7 @@ public class Program
             });
         });
 
-        builder.Services.AddScoped<IArticleService, ArticleService>();
+        builder.Services.AddScoped<IArticleCatalogService, ArticleCatalogService>();
         builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         builder.Services.AddControllers();

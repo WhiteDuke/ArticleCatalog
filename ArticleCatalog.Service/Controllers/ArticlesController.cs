@@ -12,16 +12,16 @@ namespace ArticleCatalog.Service.Controllers;
 [Route("api/[controller]")]
 public class ArticlesController : ControllerBase
 {
-    private readonly IArticleService _articleService;
+    private readonly IArticleCatalogService _articleCatalogService;
     private readonly IValidator<CreateArticleRequest> _createArticleRequestValidator;
     private readonly IValidator<UpdateArticleRequest> _updateArticleRequestValidator;
 
     public ArticlesController(
-        IArticleService articleService,
+        IArticleCatalogService articleCatalogService,
         IValidator<CreateArticleRequest> createArticleRequestValidator,
         IValidator<UpdateArticleRequest> updateArticleRequestValidator)
     {
-        _articleService = articleService;
+        _articleCatalogService = articleCatalogService;
         _createArticleRequestValidator = createArticleRequestValidator;
         _updateArticleRequestValidator = updateArticleRequestValidator;
     }
@@ -31,14 +31,14 @@ public class ArticlesController : ControllerBase
         [FromQuery] int pageNumber = 0,
         [FromQuery] int pageSize = GlobalConstants.DefaultPageSize)
     {
-        var articles = await _articleService.GetArticlesAsync(pageNumber, pageSize);
+        var articles = await _articleCatalogService.GetArticlesAsync(pageNumber, pageSize);
         return Ok(articles);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<ArticleDto>> GetArticleById([FromRoute] int id)
     {
-        var article = await _articleService.GetArticleByIdAsync(id);
+        var article = await _articleCatalogService.GetArticleByIdAsync(id);
 
         if (article == null)
         {
@@ -60,7 +60,7 @@ public class ArticlesController : ControllerBase
         
         try
         {
-            await _articleService.CreateArticleAsync(createArticleRequest);
+            await _articleCatalogService.CreateArticleAsync(createArticleRequest);
 
             return Ok();
         }
@@ -82,7 +82,7 @@ public class ArticlesController : ControllerBase
 
         try
         {
-            var updatedArticle = await _articleService.UpdateArticleAsync(updateArticleRequest);
+            var updatedArticle = await _articleCatalogService.UpdateArticleAsync(updateArticleRequest);
 
             return Ok(updatedArticle);
         }
