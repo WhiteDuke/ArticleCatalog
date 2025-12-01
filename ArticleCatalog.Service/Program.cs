@@ -1,7 +1,8 @@
+using System;
 using System.Reflection;
+using System.Threading;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using ArticleCatalog.DataAccess;
 using ArticleCatalog.Domain.Services;
 using FluentValidation;
@@ -17,7 +18,8 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+        builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
 
         // Add services to the container.
         builder.Services.AddDbContext<ArticleCatalogDbContext>(options =>
@@ -56,6 +58,26 @@ public class Program
 
         app.MapControllers();
 
+        var isDatabaseReady = false;
+        var retryCount = 0;
+
+        while (!isDatabaseReady && retryCount < 10)
+        {
+            try
+            {
+                using var scope = app.Services.CreateScope();
+                var dbContext = scope.ServiceProvider.GetRequiredService<ArticleCatalogDbContext>();
+                dbContext.Database.Migrate();
+                isDatabaseReady = true;
+            }
+            catch (Exception ex)
+            {
+                retryCount++;
+                Thread.Sleep(2000);
+                Console.WriteLine($"Попытка подключения к БД №{retryCount}. Ошибка: {ex.Message}");
+            }
+        }
+        
         app.Run();
     }
 }

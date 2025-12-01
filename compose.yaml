@@ -1,5 +1,5 @@
 ﻿services:
-  web:
+  catalog-service:
     container_name: article-catalog-app
     image: article-catalog:latest
     ports:
@@ -25,7 +25,7 @@
       - "./postgredb-data:/db-data"
     networks:
       - article-catalog-network
-
+      
 networks:
   article-catalog-network:
     driver: bridge
