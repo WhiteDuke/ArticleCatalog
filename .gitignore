@@ -1,2 +1,11 @@
+/ArticleCatalog.DataAccess/bin/
+/ArticleCatalog.DataAccess/obj/
+
+/ArticleCatalog.Domain/bin/
+/ArticleCatalog.Domain/obj/
+
 /ArticleCatalog.Dto/bin/
 /ArticleCatalog.Dto/obj/
+
+/ArticleCatalog.Service/bin/
+/ArticleCatalog.Service/obj/
