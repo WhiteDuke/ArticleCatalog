@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ArticleCatalog.DataAccess;
 
+/// <summary>
+/// Контекст доступа к базе "Каталог статей"
+/// </summary>
 public sealed class ArticleCatalogDbContext : DbContext
 {
     private const int MaxLength256 = 256;

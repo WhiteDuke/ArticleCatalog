@@ -7,6 +7,7 @@ using ArticleCatalog.Domain.Dto;
 using ArticleCatalog.Domain.Entities;
 using ArticleCatalog.Domain.Requests;
 using ArticleCatalog.Service.Exceptions;
+using ArticleCatalog.Service.Extensions;
 using ArticleCatalog.Service.Helpers;
 using Microsoft.EntityFrameworkCore;
 
@@ -64,10 +65,57 @@ public sealed class ArticleService : IArticleService
 
             _dbContext.Articles.Add(article);
             await _dbContext.SaveChangesAsync();
+            
+            var articleId = article.Id;
+
+            var existingTagIds = article.ArticleTags.Select(x => x.TagId).ToArray();
+            var matchingSections = await _dbContext.Sections
+                .Include(s => s.SectionTags)
+                .Where(section => 
+                    section.SectionTags.Count == existingTagIds.Count() &&
+                    existingTagIds.All(tagId => section.SectionTags.Any(st => st.TagId == tagId))
+                ).ToListAsync();
+
+            if (matchingSections.Any())
+            {
+                foreach (var matchingSection in matchingSections)
+                {
+                    matchingSection.SectionArticles.Add(new SectionArticle
+                    {
+                        ArticleId = articleId,
+                        SectionId = matchingSection.Id
+                    });    
+                }
+            }
+            else
+            {
+                var sectionTitle = SectionHelper.GetSectionTitle(uniqueTags);
+
+                var newSection = new Section
+                {
+                    Title = sectionTitle,
+                    SectionTags = article.ArticleTags.Select(x => new SectionTag()
+                    {
+                        TagId = x.TagId
+                    }).ToList(), 
+                    SectionArticles =
+                    [
+                        new SectionArticle
+                        {
+                            ArticleId = articleId
+                        }
+                    ]
+                };
+
+                _dbContext.Sections.Add(newSection);
+            }
+
+            await _dbContext.SaveChangesAsync();
             await transaction.CommitAsync();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Console.WriteLine(ex);
             await transaction.RollbackAsync();
             throw;
         }

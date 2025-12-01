@@ -2,7 +2,7 @@ using System.Linq;
 using ArticleCatalog.Domain.Dto;
 using ArticleCatalog.Domain.Entities;
 
-namespace ArticleCatalog.Service.Helpers;
+namespace ArticleCatalog.Service.Extensions;
 
 public static class MappingExtensions
 {

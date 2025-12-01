@@ -49,7 +49,7 @@ public class ArticlesController : ControllerBase
     }
 
     [HttpPost("create")]
-    public async Task<ActionResult> CreateArticle(CreateArticleRequest createArticleRequest)
+    public async Task<ActionResult> CreateArticle([FromBody] CreateArticleRequest createArticleRequest)
     {
         // ReSharper disable once MethodHasAsyncOverload
         var validationResult = _createArticleRequestValidator.Validate(createArticleRequest);
@@ -71,7 +71,7 @@ public class ArticlesController : ControllerBase
     }
 
     [HttpPatch("update")]
-    public async Task<ActionResult<ArticleDto>> UpdateArticle(UpdateArticleRequest updateArticleRequest)
+    public async Task<ActionResult<ArticleDto>> UpdateArticle([FromBody] UpdateArticleRequest updateArticleRequest)
     {
         // ReSharper disable once MethodHasAsyncOverload
         var validationResult = _updateArticleRequestValidator.Validate(updateArticleRequest);
