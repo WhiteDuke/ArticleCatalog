@@ -21,8 +21,8 @@
       - PGDATA=./db-data
     image: postgres:17.6-alpine3.22
     restart: always
-    volumes:
-      - "./postgredb-data:/db-data"
+    #volumes:
+    #  - "./postgredb-data:/db-data"
     networks:
       - article-catalog-network
       
